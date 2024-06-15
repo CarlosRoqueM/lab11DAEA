@@ -24,10 +24,14 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
-    
     <form asp-action="Delete">
         <input type="hidden" asp-for="id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
+    </form>
+    
+    <form asp-action="softDelete">
+        <input type="hidden" asp-for="id" />
+        <input type="submit" value="softDelete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

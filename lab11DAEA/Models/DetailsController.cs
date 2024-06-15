@@ -8,94 +8,87 @@ using Microsoft.EntityFrameworkCore;
 
 namespace lab11DAEA.Models
 {
-    public class ProductsController : Controller
+    public class DetailsController : Controller
     {
         private readonly DataContext _context;
 
-        public ProductsController(DataContext context)
+        public DetailsController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Details
         public async Task<IActionResult> Index()
         {
-              if(_context.Products == null)
-            {
-                return Problem("Entity set 'DataContext.Products'  is null.");
-            }
-
-            var products = await _context.Products
-              .Where(p => p.IsDeleted == false)
-              .ToListAsync();
-
-            return View(products);
+              return _context.Details != null ? 
+                          View(await _context.Details.ToListAsync()) :
+                          Problem("Entity set 'DataContext.Details'  is null.");
         }
 
-        // GET: Products/Details/5
+        // GET: Details/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Details == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var detail = await _context.Details
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (product == null)
+            if (detail == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(detail);
         }
 
-        // GET: Products/Create
+        // GET: Details/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Details/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Name,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("id,ProductsId,InvoicesId,amount,price,subTotal")] Detail detail)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(detail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(detail);
         }
 
-        // GET: Products/Edit/5
+        // GET: Details/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Details == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var detail = await _context.Details.FindAsync(id);
+            if (detail == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(detail);
         }
 
-        // POST: Products/Edit/5
+        // POST: Details/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,Name,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("id,ProductsId,InvoicesId,amount,price,subTotal")] Detail detail)
         {
-            if (id != product.id)
+            if (id != detail.id)
             {
                 return NotFound();
             }
@@ -104,12 +97,12 @@ namespace lab11DAEA.Models
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(detail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.id))
+                    if (!DetailExists(detail.id))
                     {
                         return NotFound();
                     }
@@ -120,69 +113,49 @@ namespace lab11DAEA.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(detail);
         }
 
-        // GET: Products/Delete/5
+        // GET: Details/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (id == null || _context.Details == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var detail = await _context.Details
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (product == null)
+            if (detail == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(detail);
         }
 
-        // POST: Products/Delete/5
+        // POST: Details/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Products == null)
+            if (_context.Details == null)
             {
-                return Problem("Entity set 'DataContext.Products'  is null.");
+                return Problem("Entity set 'DataContext.Details'  is null.");
             }
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            var detail = await _context.Details.FindAsync(id);
+            if (detail != null)
             {
-                _context.Products.Remove(product);
+                _context.Details.Remove(detail);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool DetailExists(int id)
         {
-          return (_context.Products?.Any(e => e.id == id)).GetValueOrDefault();
-        }
-
-        //POST: Products/SoftDelete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SoftDelete(int id)
-        {
-            if (_context.Products == null)
-            {
-                return Problem("Entity set 'DataContext.Products'  is null.");
-            }
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
-            {
-                product.IsDeleted = true;
-                _context.Products.Update(product);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+          return (_context.Details?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }

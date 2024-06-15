@@ -9,7 +9,7 @@
         public Customer Customer { get; set; }
 
 
-        public string date { get; set; }
+        public DateTime date { get; set; }
         public string invoiceNumbre { get; set; }
         public float total { get; set; }
     }

@@ -1,0 +1,31 @@
+﻿@model List<Invoice>
+
+<h1>Listado de Facturas</h1>
+
+<form method="get" action="/Invoices/List">
+    <label for="clientName">Nombre del Cliente:</label>
+    <input type="text" id="clientName" name="clientName">
+    <button type="submit">Buscar</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Factura</th>
+            <th>Fecha</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invoice in Model.OrderByDescending(i => i.Customer.firstName))
+        {
+            <tr>
+                <td>@invoice.Customer.firstName</td>
+                <td>@invoice.Customer.documentNumber</td>
+                <td>@invoice.invoiceNumbre</td>
+                <td>@invoice.total</td>
+            </tr>
+        }
+    </tbody>
+</table>

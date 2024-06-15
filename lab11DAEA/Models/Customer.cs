@@ -7,5 +7,6 @@
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string documentNumber { get; set; }
+        public bool IsDeleted { get; internal set; }
     }
 }

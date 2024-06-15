@@ -1,4 +1,4 @@
-﻿@model IEnumerable<lab11DAEA.Models.Customer>
+﻿@model IEnumerable<lab11DAEA.Models.Invoice>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,28 +13,34 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.lastName)
+                @Html.DisplayNameFor(model => model.Customer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.firstName)
+                @Html.DisplayNameFor(model => model.date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.documentNumber)
+                @Html.DisplayNameFor(model => model.invoiceNumbre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-            <tr>
+        <tr>
             <td>
-                    @Html.DisplayFor(modelItem => item.lastName)
+                @Html.DisplayFor(modelItem => item.Customer.id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.firstName)
-            </td>    
+                @Html.DisplayFor(modelItem => item.date)
+            </td>
             <td>
-                @Html.DisplayFor(modelItem => item.documentNumber)
+                @Html.DisplayFor(modelItem => item.invoiceNumbre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |

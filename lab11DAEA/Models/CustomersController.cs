@@ -18,11 +18,31 @@ namespace lab11DAEA.Models
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string firstName, string lastName)
         {
-              return _context.Customers != null ? 
-                          View(await _context.Customers.ToListAsync()) :
-                          Problem("Entity set 'DataContext.Customers'  is null.");
+            if (_context.Customers == null)
+            {
+                return Problem("Entity set 'DataContext.Customers' is null.");
+            }
+
+            var customers = _context.Customers
+                .Where(c => c.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                customers = customers.Where(c => c.firstName.Contains(firstName));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                customers = customers.Where(c => c.lastName.Contains(lastName));
+            }
+
+            customers = customers.OrderByDescending(c => c.lastName);
+
+            var customerList = await customers.ToListAsync();
+
+            return View(customerList);
         }
 
         // GET: Customers/Details/5
@@ -156,6 +176,30 @@ namespace lab11DAEA.Models
         private bool CustomerExists(int id)
         {
           return (_context.Customers?.Any(e => e.id == id)).GetValueOrDefault();
+        }
+
+
+        // POST: Customers/SoftDelete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            if (_context.Customers == null)
+            {
+                return Problem("Entity set 'DataContext.Customers' is null.");
+            }
+
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            customer.IsDeleted = true;
+            _context.Update(customer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
