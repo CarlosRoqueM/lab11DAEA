@@ -15,5 +15,7 @@ namespace lab11DAEA.Models
         {
             optionsBuilder.UseSqlServer("Server=LAB1504-04\\SQLEXPRESS; " +  "Initial Catalog=lab13;" + "Integrated Security=True;trustservercertificate=True");
         }
+
+        public DbSet<lab11DAEA.Models.Customer> Customer { get; set; } = default! ; 
     }
 }
