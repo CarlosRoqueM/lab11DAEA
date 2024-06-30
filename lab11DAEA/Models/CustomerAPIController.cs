@@ -18,31 +18,57 @@ namespace lab11DAEA.Models
         }
 
         [HttpPost]
-        public Customer insertCustomer(CustomerInsertRequest request)
+        public async Task<ActionResult<Customer>> InsertCustomer(CustomerInsertRequest request)
         {
-            Customer customer = new Customer
-            {
-                documentNumber = request.documentNumber,
-                lastName = request.lastName,
-                firstName = request.firstName
-            };
-
+            Customer customer = new();
+            customer.documentNumber = request.documentNumber;
+            customer.firstName = request.firstName;
+            customer.lastName = request.lastName;
+            customer.email = request.email;
             datacontext.Add(customer);
             datacontext.SaveChanges();
             return customer;
         }
 
         [HttpDelete]
-        public void Delete([FromBody] CustomerDeleteRequest request)
+        public async Task<IActionResult> DeleteCustomer(CustomerDeleteRequest request)
         {
-            // Lógica para eliminar el cliente de la base de datos
+            var id = request.id;
+
+            if (datacontext.Customers == null)
+            {
+                return NotFound();
+            }
+            var customer = await datacontext.Customers.FindAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            customer.IsDeleted = true;
+            datacontext.Customers.Update(customer);
+            await datacontext.SaveChangesAsync();
+
+            return NoContent();
         }
 
         [HttpPut]
-        public void Update([FromBody] CustomerUpdateRequest request)
+        public async Task<ActionResult<Customer>> UpdateCustomer(CustomerUpdateRequest request)
         {
-            // Lógica para actualizar el cliente en la base de datos
-        }
+            var customer = await datacontext.Customers.FindAsync(request.id);
 
+            if (customer == null || customer.IsDeleted == true)
+            {
+                return NotFound();
+            }
+
+            customer.documentNumber = request.documentNumber;
+            customer.email = request.email;
+
+            datacontext.Customers.Update(customer);
+            await datacontext.SaveChangesAsync();
+
+            return CreatedAtAction("Update Customer", new { id = customer.id }, customer);
+        }
     }
+
 }

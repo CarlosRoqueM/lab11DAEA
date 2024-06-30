@@ -13,7 +13,7 @@ namespace lab11DAEA.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=LAB1504-04\\SQLEXPRESS; " +  "Initial Catalog=lab13;" + "Integrated Security=True;trustservercertificate=True");
+            optionsBuilder.UseSqlServer("Server=A\\SQLEXPRESS; " +  "Initial Catalog=lab14;" + "Integrated Security=True;trustservercertificate=True");
         }
 
         public DbSet<lab11DAEA.Models.Customer> Customer { get; set; } = default! ; 
